@@ -1,0 +1,10 @@
+{
+  "name": "Alma — Les Petits Chercheurs",
+  "short_name": "Alma",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f8f5ef",
+  "theme_color": "#F3EBDD",
+  "lang": "fr",
+  "description": "Carnet ludique de suivi des apprentissages d'Alma."
+}

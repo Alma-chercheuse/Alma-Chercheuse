@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F3EBDD">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Alma">
+<link rel="manifest" href="manifest.json">
+<title>Alma — Les Petits Chercheurs</title>
+<style>
+:root{--bg:#f8f5ef;--card:#fff;--ink:#30312d;--muted:#74766e;--accent:#78947d;--accent2:#dfe9df;--line:#e7e2d9;--warn:#ead7b8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Arial,sans-serif}
+.app{max-width:720px;margin:auto;padding:18px 16px 100px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.brand{font-size:22px;font-weight:750}.sub{color:var(--muted);font-size:13px;margin-top:3px}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fffffff2;border-top:1px solid var(--line);display:flex;justify-content:center;z-index:5}
+nav button{flex:1;max-width:180px;background:none;border:0;padding:11px 5px 10px;color:var(--muted);font-size:12px}nav button.active{color:var(--accent);font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin:12px 0;box-shadow:0 2px 10px #00000006}
+h1{font-size:28px;margin:5px 0 8px}h2{font-size:20px;margin:4px 0 12px}h3{font-size:16px;margin:0 0 7px}.muted{color:var(--muted)}
+.btn{border:0;border-radius:14px;background:var(--accent);color:white;padding:12px 15px;font-size:15px;font-weight:700}.btn.secondary{background:var(--accent2);color:#45614b}.btn.light{background:#f1eee7;color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.tile{padding:14px;border:1px solid var(--line);border-radius:16px;background:#fff}.tile strong{display:block;margin-bottom:4px}.emoji{font-size:25px}.pill{display:inline-block;background:var(--accent2);color:#45614b;border-radius:999px;padding:5px 9px;font-size:12px;margin:2px}
+.activity{border-left:5px solid var(--accent);padding-left:13px}.question{background:#f5f0e8;border-radius:14px;padding:12px;margin-top:10px;font-size:15px}.row{display:flex;gap:8px;flex-wrap:wrap}.check{display:flex;align-items:center;gap:8px;padding:9px 0}.check input{width:20px;height:20px}textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px;font:inherit;background:#fff}textarea{min-height:90px}.hide{display:none}.stat{font-size:28px;font-weight:800}.bar{height:8px;background:#eeeae2;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent);width:0}
+.small{font-size:12px;color:var(--muted)}.date{font-weight:700}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div><div class="brand">Alma · Les Petits Chercheurs</div><div class="sub">2 ans ½ · apprendre en jouant</div></div>
+  <button class="btn light" onclick="show('profil')">⚙️</button>
+</header>
+
+<section id="home" class="page">
+  <div class="card">
+    <div class="small">ACTIVITÉ DU JOUR</div>
+    <h1 id="todayTitle">...</h1><div id="todayMeta"></div>
+    <p id="todayDesc"></p>
+    <div class="question" id="todayQuestion"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn" onclick="showActivity()">Faire l’activité</button>
+      <button class="btn light" onclick="newActivity()">Autre idée</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Cette semaine</h2>
+    <div class="grid">
+      <div class="tile"><div class="stat" id="doneCount">0</div><div class="muted">activités faites</div></div>
+      <div class="tile"><div class="stat" id="notesCount">0</div><div class="muted">observations</div></div>
+    </div>
+  </div>
+  <div class="card"><h2>Les 6 domaines</h2><div id="domains"></div></div>
+</section>
+
+<section id="activity" class="page hide">
+  <div class="card activity">
+    <div class="small" id="aDomain"></div><h1 id="aTitle"></h1><p id="aDesc"></p>
+    <div class="question"><strong>Question à poser</strong><br><span id="aQuestion"></span></div>
+    <div class="question"><strong>Pour aller plus loin</strong><br><span id="aFollow"></span></div>
+  </div>
+  <div class="card">
+    <h2>Observation</h2>
+    <label class="check"><input type="checkbox" id="try"> Alma a essayé</label>
+    <label class="check"><input type="checkbox" id="success"> Alma a réussi / compris</label>
+    <label class="check"><input type="checkbox" id="explain"> Alma a expliqué son idée</label>
+    <textarea id="note" placeholder="Qu’a-t-elle dit ? Qu’a-t-elle remarqué ? Une phrase intéressante à garder..."></textarea>
+    <button class="btn" style="margin-top:12px" onclick="saveActivity()">Enregistrer</button>
+  </div>
+</section>
+
+<section id="progress" class="page hide">
+  <div class="card"><h1>Progression</h1><p class="muted">On observe les progrès, sans notes ni comparaison.</p></div>
+  <div id="progressCards"></div>
+</section>
+
+<section id="ideas" class="page hide">
+  <div class="card"><h1>Idées du quotidien</h1><p class="muted">Des jeux de 2 à 15 minutes, sans écran.</p></div>
+  <div id="ideaList"></div>
+</section>
+
+<section id="profil" class="page hide">
+  <div class="card"><h1>Réglages</h1><p class="muted">Les données sont enregistrées sur cet appareil.</p>
+  <label>Prénom<br><input id="childName" type="text" value="Alma"></label>
+  <button class="btn" style="margin-top:12px" onclick="saveProfile()">Enregistrer</button>
+  <hr style="border:0;border-top:1px solid var(--line);margin:20px 0">
+  <button class="btn light" onclick="exportData()">Exporter mes observations</button>
+  <button class="btn light" style="margin-top:8px" onclick="resetData()">Réinitialiser</button>
+  </div>
+</section>
+</div>
+
+<nav>
+<button id="nHome" class="active" onclick="show('home')">⌂<br>Accueil</button>
+<button id="nProgress" onclick="show('progress')">◔<br>Progrès</button>
+<button id="nIdeas" onclick="show('ideas')">✦<br>Idées</button>
+</nav>
+
+<script>
+const domains=[
+["🗣️","Langage","vocabulaire, phrases, raconter, comprendre"],
+["🧠","Réflexion","logique, cause/conséquence, problèmes"],
+["🔢","Nombres","quantités, comparer, compter, partager"],
+["🔎","Curiosité","observer, prévoir, expérimenter"],
+["💬","Explication","dire pourquoi, justifier, décrire"],
+["🌱","Autonomie","choisir, essayer, persévérer"]
+];
+const activities=[
+["🗣️ Langage","La boîte à histoire","Prends trois objets familiers. Alma choisit un objet et vous inventez ensemble une petite histoire autour de lui.","Qu’est-ce qui arrive à ton personnage ?","Et après ? Comment pourrait-il résoudre son problème ?"],
+["🗣️ Langage","Le mot mystère","Décris un objet sans dire son nom : couleur, forme, usage. Puis inversez les rôles.","À quoi ça sert ?","Comment sais-tu que c’est cet objet ?"],
+["🧠 Réflexion","La tour qui tient","Construisez une tour de cubes. Ajoutez progressivement des pièces et observez quand elle tombe.","Pourquoi la tour est-elle tombée ?","Que pourrait-on changer pour qu’elle tienne mieux ?"],
+["🧠 Réflexion","Le chemin de la voiture","Fais un petit obstacle avec des coussins et demande à Alma de faire passer une voiture.","Comment la voiture peut-elle passer ?","Peut-on trouver une autre solution ?"],
+["🔢 Nombres","Un pour chacun","À table, donnez une assiette, un verre ou un couvert à chaque personne.","Combien sommes-nous ? De combien avons-nous besoin ?","Comment sais-tu qu’il n’en manque pas ?"],
+["🔢 Nombres","Le plus / le moins","Fais deux petits tas de cubes. Demande lequel en contient le plus.","Quel tas a le plus ?","Comment pourrais-tu vérifier ?"],
+["🔎 Curiosité","Flotte ou coule","Choisissez 3 objets et testez-les dans une bassine d’eau après avoir fait une prédiction.","Tu penses qu’il va flotter ou couler ?","Avais-tu raison ? Qu’est-ce que tu observes ?"],
+["🔎 Curiosité","La chasse aux détails","Pendant une promenade, cherchez trois choses rondes, trois choses vertes ou deux choses qui bougent.","Qu’est-ce que tu as trouvé ?","Qu’est-ce qui est pareil entre ces objets ?"],
+["💬 Explication","Pourquoi ?","À partir d’une situation réelle : une tour tombe, un glaçon fond, un jouet est caché... demande à Alma d’expliquer.","Pourquoi penses-tu que c’est arrivé ?","Comment pourrait-on vérifier ?"],
+["💬 Explication","Je suis d’accord / pas d’accord","Fais une petite affirmation volontairement discutable : « Le chat peut voler. »","Tu es d’accord ? Pourquoi ?","Qu’est-ce qui te fait penser ça ?"],
+["🌱 Autonomie","Deux choix","Propose deux solutions possibles pour une petite tâche : ranger, s’habiller, construire.","Laquelle veux-tu essayer ?","Pourquoi as-tu choisi celle-là ?"],
+["🌱 Autonomie","Mission du jour","Donne une petite mission réelle : mettre 3 serviettes sur la table, ranger les livres par taille, préparer le sac.","Comment vas-tu t’y prendre ?","Qu’est-ce qui a été facile ou difficile ?"]
+];
+const ideas=[
+["Cuisine","Mesurer et comparer","Verse de l’eau dans deux verres : lequel est plein, lequel contient le plus ?"],
+["Salle de bain","Plein / vide","Joue avec des gobelets : remplir, vider, transvaser, prévoir lequel débordera."],
+["Courses","Cherche et classe","Trouver les fruits, les objets ronds, les aliments rouges ; comparer gros/petit."],
+["Promenade","Détective","Chercher une chose qui vole, une qui roule, une qui pousse et une qui fait du bruit."],
+["Rangement","Catégoriser","Mettre ensemble les livres, les voitures, les animaux, puis expliquer pourquoi."],
+["Repas","Partager","Distribuer 6 morceaux entre deux personnes : « Comment faire pour que chacun en ait ? »"],
+["Vêtements","Ordre","Choisir ce qu’il faut mettre avant/après et expliquer pourquoi."],
+["Histoire","Prédire","Avant de tourner la page : « Que crois-tu qu’il va se passer ? Pourquoi ? »"]
+];
+
+let state=JSON.parse(localStorage.getItem("almaData")||'{"logs":[],"name":"Alma","offset":0}');
+let current;
+function save(){localStorage.setItem("almaData",JSON.stringify(state));}
+function show(id){
+ document.querySelectorAll(".page").forEach(x=>x.classList.add("hide"));
+ document.getElementById(id).classList.remove("hide");
+ document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+ if(id==="home")document.getElementById("nHome").classList.add("active");
+ if(id==="progress")document.getElementById("nProgress").classList.add("active");
+ if(id==="ideas")document.getElementById("nIdeas").classList.add("active");
+ if(id==="home")renderHome(); if(id==="progress")renderProgress(); if(id==="ideas")renderIdeas();
+}
+function pick(){current=activities[(new Date().getDate()+state.offset)%activities.length];}
+function renderHome(){
+ pick(); document.getElementById("todayTitle").textContent=current[1];
+ document.getElementById("todayMeta").innerHTML='<span class="pill">'+current[0]+'</span>';
+ document.getElementById("todayDesc").textContent=current[2];
+ document.getElementById("todayQuestion").textContent=current[3];
+ const week=state.logs.filter(x=>Date.now()-x.time<7*86400000);
+ document.getElementById("doneCount").textContent=week.length;
+ document.getElementById("notesCount").textContent=week.filter(x=>x.note).length;
+ document.getElementById("domains").innerHTML=domains.map(d=>'<div style="margin:9px 0"><b>'+d[0]+' '+d[1]+'</b><div class="small">'+d[2]+'</div></div>').join("");
+}
+function newActivity(){state.offset=(state.offset+1)%activities.length;save();renderHome();}
+function showActivity(){
+ document.getElementById("aDomain").textContent=current[0];document.getElementById("aTitle").textContent=current[1];
+ document.getElementById("aDesc").textContent=current[2];document.getElementById("aQuestion").textContent=current[3];document.getElementById("aFollow").textContent=current[4];
+ ["try","success","explain"].forEach(id=>document.getElementById(id).checked=false);document.getElementById("note").value="";show("activity");
+}
+function saveActivity(){
+ state.logs.push({time:Date.now(),title:current[1],domain:current[0],try:tryEl.checked,success:successEl.checked,explain:explainEl.checked,note:noteEl.value});
+ save();show("home");
+}
+const tryEl=document.getElementById("try"),successEl=document.getElementById("success"),explainEl=document.getElementById("explain"),noteEl=document.getElementById("note");
+function renderProgress(){
+ const html=domains.map(d=>{
+  const logs=state.logs.filter(x=>x.domain.includes(d[1]));
+  const score=logs.length?Math.round((logs.filter(x=>x.success).length/logs.length)*100):0;
+  return '<div class="card"><h2>'+d[0]+' '+d[1]+'</h2><div class="bar"><i style="width:'+score+'%"></i></div><p class="small">'+logs.length+' activité(s) · '+score+'% des observations indiquent une réussite</p></div>';
+ }).join("");
+ document.getElementById("progressCards").innerHTML=html+'<div class="card"><h2>Observations récentes</h2>'+state.logs.slice(-8).reverse().map(x=>'<p><b>'+x.title+'</b><br><span class="small">'+new Date(x.time).toLocaleDateString('fr-FR')+'</span><br>'+escapeHtml(x.note||"Pas de note.")+'</p>').join("")+'</div>';
+}
+function renderIdeas(){document.getElementById("ideaList").innerHTML=ideas.map(x=>'<div class="card"><span class="pill">'+x[0]+'</span><h2>'+x[1]+'</h2><p>'+x[2]+'</p></div>').join("");}
+function saveProfile(){state.name=document.getElementById("childName").value||"Alma";save();alert("Enregistré.");}
+function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="alma-observations.json";a.click();}
+function resetData(){if(confirm("Supprimer toutes les observations ?")){state={logs:[],name:"Alma",offset:0};save();show("home");}}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+renderHome();
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+</script>
+</body></html>
