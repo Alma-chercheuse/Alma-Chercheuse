@@ -1,54 +1,552 @@
-<!doctype html>
-<html lang="fr"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f5f0e7"><link rel="manifest" href="manifest.json"><title>Alma · Les Petits Chercheurs</title>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alma</title>
+<meta name="theme-color" content="#2E6F6B">
+<link rel="manifest" href="manifest.json">
 <style>
-:root{--bg:#f7f3ec;--card:#fffdf9;--ink:#30342f;--muted:#777970;--green:#78906f;--sand:#d9bd91;--line:#e8e0d5;--red:#a65d55}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.app{max-width:760px;margin:auto;padding:18px 16px 105px}.top{display:flex;justify-content:space-between;align-items:center}.brand{font-weight:800;font-size:20px}.muted{color:var(--muted)}h1{font-size:30px;line-height:1.1;margin:18px 0 8px}h2{margin:7px 0;font-size:24px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--green)}.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:19px;margin:14px 0;box-shadow:0 5px 18px #00000008}.hero{background:linear-gradient(135deg,#edf1e9,#fffaf1)}button{border:0;border-radius:14px;padding:13px 16px;font:inherit;font-weight:750;background:var(--green);color:white}button.secondary{background:#eee9df;color:var(--ink)}button.ghost{background:transparent;color:var(--ink);padding:7px}.actions{display:flex;gap:9px;flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.tile{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px}.tile b{display:block;margin-bottom:5px}.pill{display:inline-block;background:#eee9df;border-radius:99px;padding:6px 9px;font-size:12px;margin:3px 3px 3px 0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.stat{background:#fff;border:1px solid var(--line);border-radius:17px;padding:13px}.stat strong{display:block;font-size:25px}.stat span{font-size:11px;color:var(--muted)}.question{font-size:19px;font-weight:800;line-height:1.35}.steps li{margin:9px 0;line-height:1.4}.bar{height:9px;background:#ece7de;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;background:var(--green)}input,textarea,select{width:100%;padding:13px;border:1px solid var(--line);border-radius:13px;background:#fff;font:inherit}textarea{min-height:85px}.tabs{position:fixed;z-index:10;bottom:0;left:0;right:0;background:#fffdf9ee;border-top:1px solid var(--line);backdrop-filter:blur(12px)}.tabsin{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}.tab{background:transparent;color:var(--muted);border-radius:0;padding:11px 4px;font-size:11px}.tab.active{color:var(--green)}.list{display:grid;gap:9px}.item{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px}.notice{font-size:13px;line-height:1.5;color:var(--muted)}.danger{color:var(--red)}@media(min-width:600px){.grid{grid-template-columns:repeat(3,1fr)}}
-</style></head><body><div id="app"></div>
-<nav class="tabs"><div class="tabsin">
-<button class="tab active" data-t="home">⌂<br>Accueil</button><button class="tab" data-t="ideas">✦<br>Idées</button><button class="tab" data-t="progress">◔<br>Progrès</button><button class="tab" data-t="settings">⚙<br>Réglages</button>
-</div></nav>
+  :root {
+    --bg: #FAF7F2;
+    --card: #FFFFFF;
+    --ink: #26302E;
+    --muted: #6B7570;
+    --accent: #2E6F6B;
+    --accent-light: #E4F1EF;
+    --warn-bg: #FFF6E5;
+    --warn-border: #E8C77E;
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    padding-bottom: 72px;
+  }
+  header.top {
+    padding: 20px 20px 12px;
+  }
+  header.top h1 {
+    margin: 0;
+    font-size: 22px;
+  }
+  header.top p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  main {
+    padding: 0 16px;
+  }
+  section.view { display: none; }
+  section.view.active { display: block; }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .card h2 {
+    margin: 0 0 8px;
+    font-size: 16px;
+  }
+  .concept-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .concept-chip {
+    background: var(--accent-light);
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+    text-align: left;
+  }
+  .concept-chip .emoji { font-size: 18px; display: block; margin-bottom: 4px; }
+  .niveau {
+    background: var(--accent-light);
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin: 6px 0;
+    font-size: 14px;
+  }
+  .status-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .status-btn {
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .status-btn.selected {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    font-weight: 600;
+  }
+  textarea, input[type=text] {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+  }
+  button.primary {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  .disclaimer {
+    background: var(--warn-bg);
+    border: 1px solid var(--warn-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #6b5a1f;
+    margin-top: 10px;
+  }
+  .journal-entry {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+    font-size: 14px;
+  }
+  .journal-entry .meta {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+  nav.tabbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid #eee;
+    padding: 6px 0 max(6px, env(safe-area-inset-bottom));
+  }
+  nav.tabbar button {
+    background: none;
+    border: none;
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 6px;
+  }
+  nav.tabbar button .icon { font-size: 20px; }
+  nav.tabbar button.active { color: var(--accent); font-weight: 600; }
+  .empty { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Alma</h1>
+  <p id="header-sub">4 concepts par semaine</p>
+</header>
+
+<main>
+
+  <!-- ACCUEIL -->
+  <section id="view-accueil" class="view active">
+    <div class="card">
+      <h2>Semaine du <span id="accueil-date"></span></h2>
+      <div class="concept-grid" id="accueil-concepts"></div>
+    </div>
+    <div class="card">
+      <h2>🧠 Conseil du jour</h2>
+      <p id="conseil-titre" style="font-weight:600; margin:0 0 6px;"></p>
+      <p id="conseil-corps" style="margin:0 0 6px;"></p>
+      <p class="empty" id="conseil-pourquoi"></p>
+      <div class="disclaimer" id="conseil-disclaimer"></div>
+    </div>
+  </section>
+
+  <!-- CALENDRIER -->
+  <section id="view-calendrier" class="view">
+    <div class="card">
+      <h2>Concepts de la semaine</h2>
+      <div class="concept-grid" id="calendrier-concepts"></div>
+      <p class="empty" style="margin-top:10px;">Objectif : explorer les 4 concepts à son rythme, pas de pression quotidienne.</p>
+    </div>
+  </section>
+
+  <!-- EXPLORER -->
+  <section id="view-explorer" class="view">
+    <div class="card">
+      <h2>Bibliothèque d'activités</h2>
+      <div id="explorer-list"></div>
+    </div>
+  </section>
+
+  <!-- CONCEPTS -->
+  <section id="view-concepts" class="view">
+    <div class="card">
+      <h2>Concept en cours</h2>
+      <select id="concept-select" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;"></select>
+      <div id="concept-detail" style="margin-top:12px;"></div>
+
+      <h2 style="margin-top:18px;">Alma l'explique</h2>
+      <div class="status-row" id="statut-row"></div>
+      <textarea id="phrase-enfant" rows="2" placeholder="Phrase d'Alma (optionnel) — ex. « Même si je les écarte, il y en a toujours trois... »" style="margin-top:10px;"></textarea>
+      <button class="primary" id="btn-save-observation">Enregistrer</button>
+    </div>
+  </section>
+
+  <!-- JOURNAL -->
+  <section id="view-journal" class="view">
+    <div class="card">
+      <h2>📖 Journal d'Alma</h2>
+      <div id="journal-list"><p class="empty">Aucune observation pour l'instant.</p></div>
+    </div>
+  </section>
+
+  <!-- PARENT -->
+  <section id="view-parent" class="view">
+    <div class="card">
+      <h2>👩‍👧 Parent</h2>
+      <p>Conseils pédagogiques et repères pour accompagner sans faire à sa place.</p>
+    </div>
+    <div class="card">
+      <h2>Comment aider sans faire à sa place</h2>
+      <ul style="padding-left:18px; margin:0;">
+        <li>Laisser le temps de chercher avant de proposer un indice.</li>
+        <li>Préférer « Comment tu sais ? » à donner la réponse.</li>
+        <li>Accueillir l'erreur comme un point de départ, pas comme un échec.</li>
+      </ul>
+      <div class="disclaimer">
+        Ces conseils sont des stratégies pédagogiques ; ils ne constituent pas des recommandations médicales ni une méthode permettant d'augmenter l'intelligence.
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="tabbar">
+  <button data-view="accueil" class="active"><span class="icon">🏠</span>Accueil</button>
+  <button data-view="calendrier"><span class="icon">📅</span>Calendrier</button>
+  <button data-view="explorer"><span class="icon">🧩</span>Explorer</button>
+  <button data-view="concepts"><span class="icon">🧠</span>Concepts</button>
+  <button data-view="journal"><span class="icon">📖</span>Journal</button>
+  <button data-view="parent"><span class="icon">👩‍👧</span>Parent</button>
+</nav>
+
 <script>
-const domains=[
-["Langage","🗣️","Parler, raconter, expliquer"],["Nombres","🔢","Compter, comparer, quantités"],["Logique","🧩","Trier, associer, résoudre"],["Curiosité","🔎","Observer, prédire, expérimenter"],["Motricité fine","✋","Manipuler, construire, coordonner"],["Créativité","🎨","Imaginer, créer, exprimer"]
-];
-const acts=[
-["sac","Langage","Le sac mystérieux","5–10 min","3 objets","Décrire et justifier","Comment sais-tu que c’est celui-là ?","Mettre un objet dans un sac, le faire toucher, demander 2–3 indices, puis la déduction.","Décrire la texture, la forme, le poids, puis expliquer la réponse."],
-["histoire","Langage","L’histoire en 3 images","10 min","3 photos/images","Raconter dans l’ordre","Qu’est-ce qui s’est passé avant ? Et après ?","Mélanger trois images et demander à Alma de les ordonner puis de raconter.","Changer une image et demander ce qui ne va plus."],
-["trois","Nombres","La chasse aux 3","5 min","Objets du quotidien","Construire une petite quantité","Comment peux-tu vérifier qu’il y en a exactement 3 ?","Demander exactement 1, 2 ou 3 objets. Laisser Alma trouver sa stratégie de vérification.","Demander 4 ou comparer deux groupes."],
-["plus","Nombres","Plus ou moins ?","5 min","Petits objets","Comparer des quantités","Comment sais-tu quel groupe en a le plus ?","Créer deux petits groupes, demander une prédiction, puis vérifier en associant les objets deux à deux.","Créer des groupes presque identiques."],
-["tri","Logique","Le tri des trésors","10 min","Objets variés","Créer une règle de classement","Pourquoi as-tu mis ceux-là ensemble ?","Laisser Alma trier librement puis expliquer sa règle.","Demander une deuxième façon de trier."],
-["memo","Logique","Qui va avec qui ?","5–10 min","Paires d’objets","Associer selon une relation","Qu’est-ce qui te fait penser qu’ils vont ensemble ?","Présenter quelques objets qui peuvent former des paires et demander les liens.","Trouver une autre paire possible."],
-["eau","Curiosité","Que va-t-il se passer ?","10 min","Eau + 2 objets","Prédire puis observer","Qu’est-ce que tu penses qui va arriver ? Pourquoi ?","Avant de tester, demander une prédiction. Tester puis comparer avec l’idée de départ.","Ajouter un troisième objet."],
-["ombre","Curiosité","L’ombre bouge","10 min","Lampe + objet","Observer cause et effet","Qu’est-ce qui change si on déplace la lampe ?","Faire une ombre avec un objet et déplacer doucement la source de lumière.","Faire une prédiction avant chaque changement."],
-["tour","Motricité fine","La tour qui tient","10 min","Cubes/boîtes","Planifier et ajuster","Que pourrais-tu changer pour qu’elle tienne ?","Construire, laisser tomber si elle tombe, puis demander à Alma ce qu’elle modifierait.","Défi : plus haute ou plus large."],
-["pinces","Motricité fine","Le transfert délicat","5–10 min","Pinces + pompons","Coordination et précision","Comment faire pour ne pas le faire tomber ?","Transférer de petits objets avec un outil adapté à l’âge, sous surveillance.","Changer la distance ou la taille des objets."],
-["et-si","Créativité","Et si… ?","5 min","Aucun","Imaginer et développer une idée","Et si les animaux pouvaient parler ?","Lancer une question imaginaire et relancer avec « et après ? ».","Construire une histoire en trois moments."],
-["invente","Créativité","Invente un usage","5 min","Un objet banal","Divergence et imagination","À quoi pourrait-il servir autrement ?","Choisir un objet et chercher ensemble des usages imaginaires.","Inventer un objet qui n’existe pas."]
-];
-let S=JSON.parse(localStorage.getItem("almaV2")||"null")||{name:"Alma",done:[],obs:[],favorites:[],tab:"home"};
-let current=acts[0];
-const esc=x=>String(x).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-function save(){localStorage.setItem("almaV2",JSON.stringify(S))}
-function setTab(t){S.tab=t;save();render()}
-function act(id){current=acts.find(a=>a[0]===id);showAct()}
-function randomAct(){current=acts[Math.floor(Math.random()*acts.length)];showAct()}
-function isFav(id){return S.favorites.includes(id)}
-function toggleFav(id){S.favorites=isFav(id)?S.favorites.filter(x=>x!==id):[...S.favorites,id];save();render()}
-function showAct(){document.getElementById("app").innerHTML=`<main class="app"><button class="ghost" onclick="render()">← Retour</button><div class="card hero"><div class="eyebrow">${current[1]}</div><h1>${current[2]}</h1><span class="pill">⏱ ${current[3]}</span><span class="pill">Matériel : ${current[4]}</span><p><b>Objectif :</b> ${current[5]}</p><h3>Comment faire</h3><ol class="steps"><li>${current[7]}</li><li>Laisser Alma chercher avant d’aider.</li><li>Demander une explication, même courte.</li></ol><div class="card"><div class="eyebrow">Question chercheuse</div><div class="question">${current[6]}</div></div><div class="actions"><button onclick="done()">✓ Réalisée</button><button class="secondary" onclick="observation()">Ajouter une observation</button><button class="secondary" onclick="toggleFav('${current[0]}')">${isFav(current[0])?"★ Favori":"☆ Favori"}</button></div></div></main>`}
-function done(){S.done.push({id:current[0],d:current[1],title:current[2],ts:Date.now()});save();observation()}
-function observation(){document.getElementById("app").innerHTML=`<main class="app"><button class="ghost" onclick="render()">← Retour</button><div class="card"><div class="eyebrow">Observation</div><h2>${current[2]}</h2><label>Ce qu’Alma a essayé</label><textarea id="a"></textarea><label>Ce qu’elle a compris / réussi</label><textarea id="b"></textarea><label>Comment a-t-elle expliqué ?</label><select id="c"><option>Spontanément</option><option>Avec une question</option><option>Après démonstration</option><option>Pas encore</option></select><label>Un mot-clé</label><input id="k" placeholder="ex. comparaison, persévérance"><br><br><button onclick="saveObs()">Enregistrer</button></div></main>`}
-function saveObs(){let text=[a.value.trim(),b.value.trim(),"Explication : "+c.value,k.value.trim()?("Mot-clé : "+k.value.trim()):""].filter(Boolean).join(" · ");if(!text)return;S.obs.push({title:current[2],d:current[1],text,ts:Date.now()});save();setTab("progress")}
-function home(){let week=S.done.filter(x=>Date.now()-x.ts<6048e5).length;return `<main class="app"><header class="top"><div><div class="brand">Alma · Les Petits Chercheurs</div><div class="muted">Carnet de curiosité et de réflexion</div></div><button class="ghost" onclick="setTab('settings')">⚙</button></header><h1>Bonjour ${esc(S.name)}.</h1><p class="notice">Une activité courte peut devenir une vraie occasion de parler, comparer, prédire, essayer et expliquer.</p><div class="card hero"><div class="eyebrow">Suggestion du jour</div><h2>${current[2]}</h2><p>${current[5]}</p><div class="actions"><button onclick="act('${current[0]}')">Faire l’activité</button><button class="secondary" onclick="randomAct()">Autre idée</button></div></div><div class="stats"><div class="stat"><strong>${week}</strong><span>cette semaine</span></div><div class="stat"><strong>${S.done.length}</strong><span>activités</span></div><div class="stat"><strong>${S.obs.length}</strong><span>observations</span></div></div><div class="card"><div class="eyebrow">Les 6 domaines</div><div class="grid">${domains.map(d=>`<div class="tile"><b>${d[1]} ${d[0]}</b><small class="muted">${d[2]}</small></div>`).join("")}</div></div><div class="card"><div class="eyebrow">La posture du parent</div><p class="notice">Avant de donner la réponse : demander « Qu’est-ce que tu penses ? », « Comment tu sais ? », « Qu’est-ce qu’on pourrait essayer ? ».</p></div></main>`}
-function ideas(){let list=acts.map(a=>`<div class="item"><b>${a[2]}</b><br><small class="muted">${a[1]} · ${a[3]} · ${a[5]}</small><br><br><button onclick="act('${a[0]}')">Voir</button> <button class="secondary" onclick="toggleFav('${a[0]}')">${isFav(a[0])?"★":"☆"}</button></div>`).join("");return `<main class="app"><div class="eyebrow">Bibliothèque</div><h1>Idées d’activités</h1><div class="card"><label>Domaine</label><select onchange="filter(this.value)"><option value="">Tous</option>${domains.map(d=>`<option>${d[0]}</option>`).join("")}</select></div><div id="list" class="list">${list}</div></main>`}
-function filter(d){document.getElementById("list").innerHTML=acts.filter(a=>!d||a[1]===d).map(a=>`<div class="item"><b>${a[2]}</b><br><small class="muted">${a[1]} · ${a[3]}</small><br><br><button onclick="act('${a[0]}')">Voir</button></div>`).join("")}
-function progress(){let counts={};domains.forEach(d=>counts[d[0]]=0);S.done.forEach(x=>counts[x.d]=(counts[x.d]||0)+1);return `<main class="app"><div class="eyebrow">Suivi</div><h1>Progression d’Alma</h1><p class="notice">Ce suivi sert à observer les expériences vécues, pas à attribuer une note.</p><div class="card">${domains.map(d=>{let n=counts[d[0]]||0;return `<p><b>${d[1]} ${d[0]}</b> · ${n}</p><div class="bar"><i style="width:${Math.min(100,n*16.7)}%"></i></div>`}).join("")}</div><div class="card"><div class="eyebrow">Historique</div><div class="list">${S.done.slice(-10).reverse().map(x=>`<div class="item"><b>${esc(x.title)}</b><br><small class="muted">${x.d} · ${new Date(x.ts).toLocaleDateString("fr-FR")}</small></div>`).join("")||'<p class="notice">Aucune activité pour le moment.</p>'}</div><div class="card"><div class="eyebrow">Observations</div>${S.obs.slice(-8).reverse().map(x=>`<div class="item"><b>${new Date(x.ts).toLocaleDateString("fr-FR")} · ${esc(x.title)}</b><p>${esc(x.text)}</p></div>`).join("")||'<p class="notice">Aucune observation.</p>'}<button onclick="exportData()">Exporter les données</button></div></main>`}
-function settings(){return `<main class="app"><div class="eyebrow">Réglages</div><h1>Le carnet</h1><div class="card"><label>Prénom</label><input id="name" value="${esc(S.name)}"><br><br><button onclick="S.name=name.value.trim()||'Alma';save();render()">Enregistrer</button></div><div class="card"><button onclick="exportData()">Exporter mes données</button><p class="notice">L’export crée un fichier JSON avec les activités et observations enregistrées sur cet appareil.</p><button class="secondary" onclick="resetData()">Réinitialiser les données</button></div><div class="card"><div class="eyebrow">À propos</div><p class="notice">V2 · application web installable · données locales · fonctionnement hors connexion après mise en cache.</p></div></main>`}
-function exportData(){let b=new Blob([JSON.stringify(S,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="alma-petits-chercheurs.json";a.click()}
-function resetData(){if(confirm("Supprimer toutes les activités et observations ?")){S={name:S.name,done:[],obs:[],favorites:[],tab:"home"};save();render()}}
-function render(){document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.t===S.tab));document.getElementById("app").innerHTML=S.tab==="home"?home():S.tab==="ideas"?ideas():S.tab==="progress"?progress():settings()}
-document.querySelectorAll(".tab").forEach(x=>x.onclick=()=>setTab(x.dataset.t));
-if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
-render();
-</script></body></html>
+// ---------- Données d'exemple (à remplacer par un back-end / CMS) ----------
+const ALMA_DATA = {
+  semaineCourante: {
+    semaine_debut: new Date().toISOString().slice(0, 10),
+    concepts: [
+      { concept_id: "quantite", categorie: "logique" },
+      { concept_id: "cause_consequence", categorie: "langage" },
+      { concept_id: "flotte_coule", categorie: "scientifique" },
+      { concept_id: "essai_erreur", categorie: "transversal" }
+    ],
+    objectif_affiche: "Explorer les 4 concepts à son rythme."
+  },
+  concepts: [
+    {
+      id: "quantite",
+      categorie: "logique",
+      titre: "La quantité",
+      intention_parent: "Une quantité reste la même même si les objets changent de place.",
+      niveaux: {
+        "1_question": "Tu penses qu'il y en a toujours autant ?",
+        "2_indice": "Comment pourrait-on vérifier ?",
+        "3_experience": "Comptons ensemble.",
+        "4_transfert": "Est-ce que ça fonctionnerait avec 3 voitures ?"
+      }
+    },
+    {
+      id: "cause_consequence",
+      categorie: "langage",
+      titre: "Cause / conséquence",
+      intention_parent: "Une action entraîne un effet observable.",
+      niveaux: {
+        "1_question": "Qu'est-ce qui va se passer si... ?",
+        "2_indice": "Qu'est-ce qui a changé après ?",
+        "3_experience": "Essayons et regardons ce qui se passe.",
+        "4_transfert": "Est-ce que ça marche pareil avec autre chose ?"
+      }
+    },
+    {
+      id: "flotte_coule",
+      categorie: "scientifique",
+      titre: "Flotte / coule",
+      intention_parent: "Certains objets flottent, d'autres coulent, et ce n'est pas seulement une question de taille.",
+      niveaux: {
+        "1_question": "Tu penses que ça va flotter ou couler ?",
+        "2_indice": "Comment on pourrait le savoir ?",
+        "3_experience": "Mettons-le dans l'eau pour voir.",
+        "4_transfert": "Et cet autre objet, à ton avis ?"
+      }
+    },
+    {
+      id: "essai_erreur",
+      categorie: "transversal",
+      titre: "Essai / erreur",
+      intention_parent: "Se tromper fait partie de comment on apprend.",
+      niveaux: {
+        "1_question": "Qu'est-ce qui te fait penser ça ?",
+        "2_indice": "Comment pourrais-tu vérifier ?",
+        "3_experience": "Essaie, et on regarde ensemble.",
+        "4_transfert": "Est-ce que cette idée t'aide pour autre chose ?"
+      }
+    }
+  ],
+  activites: [
+    {
+      id: "act_quantite_nourriture",
+      concept_id: "quantite",
+      contexte: "repas",
+      consigne_parent: "Mets 3 morceaux de nourriture ici. Demande à Alma combien il y en a. Écarte ensuite les morceaux. Demande-lui s'il y en a toujours 3.",
+      question_pivot: "Comment tu sais ?"
+    }
+  ],
+  conseilDuJour: {
+    id: "conseil_erreur_verification",
+    titre: "Ne corrigez pas trop vite",
+    corps: "Lorsque Alma donne une réponse incorrecte, essayez d'abord : « Qu'est-ce qui te fait penser ça ? » Puis laissez-la vérifier.",
+    pourquoi: "L'erreur peut devenir une occasion d'examiner son raisonnement plutôt qu'un simple signal « faux ».",
+    avertissement_obligatoire: "Ce conseil est une stratégie pédagogique ; il ne constitue pas une recommandation médicale ou une méthode permettant d'augmenter l'intelligence."
+  }
+};
+
+// ---------- Navigation ----------
+document.querySelectorAll('nav.tabbar button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('nav.tabbar button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('section.view').forEach(v => v.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('view-' + btn.dataset.view).classList.add('active');
+  });
+});
+
+// ---------- Data helpers ----------
+const CATEGORIE_EMOJI = { logique: '🔢', langage: '🗣️', scientifique: '🔎', transversal: '🧠' };
+
+function conceptById(id) {
+  return ALMA_DATA.concepts.find(c => c.id === id);
+}
+
+function formatDate(iso) {
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+}
+
+// ---------- Local storage (observations) ----------
+const STORAGE_KEY = 'alma_observations_v1';
+function loadObservations() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch (e) { return []; }
+}
+function saveObservations(list) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+
+// ---------- Render: Accueil ----------
+function renderAccueil() {
+  const semaine = ALMA_DATA.semaineCourante;
+  document.getElementById('accueil-date').textContent = formatDate(semaine.semaine_debut);
+  const grid = document.getElementById('accueil-concepts');
+  grid.innerHTML = '';
+  semaine.concepts.forEach(entry => {
+    const c = conceptById(entry.concept_id);
+    if (!c) return;
+    const chip = document.createElement('button');
+    chip.className = 'concept-chip';
+    chip.innerHTML = `<span class="emoji">${CATEGORIE_EMOJI[entry.categorie] || ''}</span>${c.titre}`;
+    chip.addEventListener('click', () => showConceptDetail(c.id));
+    grid.appendChild(chip);
+  });
+
+  const conseil = ALMA_DATA.conseilDuJour;
+  document.getElementById('conseil-titre').textContent = conseil.titre;
+  document.getElementById('conseil-corps').textContent = conseil.corps;
+  document.getElementById('conseil-pourquoi').textContent = 'Pourquoi ? ' + conseil.pourquoi;
+  document.getElementById('conseil-disclaimer').textContent = conseil.avertissement_obligatoire;
+}
+
+// ---------- Render: Calendrier ----------
+function renderCalendrier() {
+  const semaine = ALMA_DATA.semaineCourante;
+  const grid = document.getElementById('calendrier-concepts');
+  grid.innerHTML = '';
+  semaine.concepts.forEach(entry => {
+    const c = conceptById(entry.concept_id);
+    if (!c) return;
+    const chip = document.createElement('div');
+    chip.className = 'concept-chip';
+    chip.innerHTML = `<span class="emoji">${CATEGORIE_EMOJI[entry.categorie] || ''}</span>${c.titre}`;
+    grid.appendChild(chip);
+  });
+}
+
+// ---------- Render: Explorer ----------
+function renderExplorer() {
+  const list = document.getElementById('explorer-list');
+  list.innerHTML = '';
+  if (!ALMA_DATA.activites.length) {
+    list.innerHTML = '<p class="empty">Aucune activité pour l\'instant.</p>';
+    return;
+  }
+  ALMA_DATA.activites.forEach(act => {
+    const c = conceptById(act.concept_id);
+    const card = document.createElement('div');
+    card.className = 'niveau';
+    card.innerHTML = `<strong>${c ? c.titre : act.concept_id}</strong><br>${act.consigne_parent}`;
+    list.appendChild(card);
+  });
+}
+
+// ---------- Render: Concepts ----------
+function renderConceptSelect() {
+  const select = document.getElementById('concept-select');
+  select.innerHTML = '';
+  ALMA_DATA.concepts.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = `${CATEGORIE_EMOJI[c.categorie] || ''} ${c.titre}`;
+    select.appendChild(opt);
+  });
+  select.addEventListener('change', () => showConceptDetail(select.value));
+  if (ALMA_DATA.concepts.length) showConceptDetail(ALMA_DATA.concepts[0].id);
+}
+
+let currentConceptId = null;
+let currentStatut = null;
+
+function showConceptDetail(id) {
+  currentConceptId = id;
+  document.getElementById('concept-select').value = id;
+  const c = conceptById(id);
+  const detail = document.getElementById('concept-detail');
+  if (!c) { detail.innerHTML = ''; return; }
+  detail.innerHTML = `
+    <p class="empty">${c.intention_parent || ''}</p>
+    <div class="niveau"><strong>1. Question</strong><br>${c.niveaux['1_question']}</div>
+    <div class="niveau"><strong>2. Indice</strong><br>${c.niveaux['2_indice']}</div>
+    <div class="niveau"><strong>3. Expérience</strong><br>${c.niveaux['3_experience']}</div>
+    <div class="niveau"><strong>4. Transfert</strong><br>${c.niveaux['4_transfert']}</div>
+  `;
+  currentStatut = null;
+  document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('phrase-enfant').value = '';
+  document.getElementById('view-accueil').classList.remove('active');
+  document.getElementById('view-concepts').classList.add('active');
+  document.querySelectorAll('nav.tabbar button').forEach(b => b.classList.remove('active'));
+  document.querySelector('nav.tabbar button[data-view="concepts"]').classList.add('active');
+}
+
+function renderStatutRow() {
+  const statuts = [
+    { key: 'explique_ses_mots', label: '🟢 Ses propres mots' },
+    { key: 'explique_avec_aide', label: '🟡 Avec de l\'aide' },
+    { key: 'montre_sans_expliquer', label: '🔵 Montre sans expliquer' },
+    { key: 'pas_encore_compris', label: '⚪ Pas encore compris' },
+    { key: 'nouvelle_question', label: '❓ Nouvelle question' }
+  ];
+  const row = document.getElementById('statut-row');
+  row.innerHTML = '';
+  statuts.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'status-btn';
+    btn.textContent = s.label;
+    btn.addEventListener('click', () => {
+      currentStatut = s.key;
+      document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+    row.appendChild(btn);
+  });
+}
+
+document.getElementById('btn-save-observation').addEventListener('click', () => {
+  if (!currentConceptId || !currentStatut) {
+    alert('Choisis un statut pour « Alma l\'explique » avant d\'enregistrer.');
+    return;
+  }
+  const obs = {
+    id: 'obs_' + Date.now(),
+    concept_id: currentConceptId,
+    date: new Date().toISOString().slice(0, 10),
+    statut: currentStatut,
+    phrase_enfant: document.getElementById('phrase-enfant').value.trim() || null
+  };
+  const list = loadObservations();
+  list.unshift(obs);
+  saveObservations(list);
+  renderJournal();
+  document.getElementById('phrase-enfant').value = '';
+  document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('selected'));
+  currentStatut = null;
+});
+
+// ---------- Render: Journal ----------
+const STATUT_LABEL = {
+  explique_ses_mots: '🟢 Ses propres mots',
+  explique_avec_aide: '🟡 Avec de l\'aide',
+  montre_sans_expliquer: '🔵 Montre sans expliquer',
+  pas_encore_compris: '⚪ Pas encore compris',
+  nouvelle_question: '❓ Nouvelle question'
+};
+
+function renderJournal() {
+  const list = document.getElementById('journal-list');
+  const obs = loadObservations();
+  if (!obs.length) {
+    list.innerHTML = '<p class="empty">Aucune observation pour l\'instant.</p>';
+    return;
+  }
+  list.innerHTML = '';
+  obs.forEach(o => {
+    const c = conceptById(o.concept_id);
+    const div = document.createElement('div');
+    div.className = 'journal-entry';
+    div.innerHTML = `
+      <div class="meta">${formatDate(o.date)} · ${c ? c.titre : o.concept_id} · ${STATUT_LABEL[o.statut] || o.statut}</div>
+      ${o.phrase_enfant ? `<div>« ${o.phrase_enfant} »</div>` : ''}
+    `;
+    list.appendChild(div);
+  });
+}
+
+// ---------- Init ----------
+renderAccueil();
+renderCalendrier();
+renderExplorer();
+renderConceptSelect();
+renderStatutRow();
+renderJournal();
+
+// ---------- Service worker ----------
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
