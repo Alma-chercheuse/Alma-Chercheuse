@@ -14,35 +14,66 @@
     --muted: #6B7570;
     --accent: #2E6F6B;
     --accent-light: #E4F1EF;
+    --accent-dark: #1F5450;
     --warn-bg: #FFF6E5;
     --warn-border: #E8C77E;
-    --radius: 16px;
+    --green: #3CA370;
+    --yellow: #E0A72E;
+    --blue: #3E8FD0;
+    --grey: #B9C0BD;
+    --radius: 18px;
+    --radius-sm: 12px;
   }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; }
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background: var(--bg);
     color: var(--ink);
-    padding-bottom: 72px;
+    padding-bottom: 78px;
+    overscroll-behavior-y: contain;
   }
   header.top {
-    padding: 20px 20px 12px;
+    padding: 22px 20px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
   }
-  header.top h1 {
-    margin: 0;
-    font-size: 22px;
+  header.top .title-block { display: flex; align-items: center; gap: 10px; }
+  header.top .mascot {
+    font-size: 30px;
+    display: inline-block;
+    animation: bob 3.2s ease-in-out infinite;
   }
-  header.top p {
-    margin: 4px 0 0;
-    color: var(--muted);
-    font-size: 14px;
+  @keyframes bob {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-4px) rotate(2deg); }
   }
-  main {
-    padding: 0 16px;
+  header.top h1 { margin: 0; font-size: 22px; }
+  header.top p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+  #install-btn {
+    display: none;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
   }
-  section.view { display: none; }
+  main { padding: 0 16px; }
+  section.view {
+    display: none;
+    animation: fadeSlideIn .28s ease both;
+  }
   section.view.active { display: block; }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
   .card {
     background: var(--card);
     border-radius: var(--radius);
@@ -50,95 +81,135 @@
     margin-bottom: 14px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   }
-  .card h2 {
-    margin: 0 0 8px;
-    font-size: 16px;
-  }
+  .card h2 { margin: 0 0 8px; font-size: 16px; display: flex; align-items: center; gap: 6px; }
+
+  /* Progress ring on Accueil */
+  .progress-row { display: flex; align-items: center; gap: 14px; margin-bottom: 4px; }
+  .progress-ring { flex-shrink: 0; }
+  .progress-text { font-size: 13px; color: var(--muted); }
+  .progress-text strong { color: var(--ink); font-size: 15px; }
+
   .concept-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
   .concept-chip {
+    position: relative;
     background: var(--accent-light);
-    border-radius: 12px;
-    padding: 10px;
+    border-radius: var(--radius-sm);
+    padding: 12px 10px;
     font-size: 13px;
+    font-weight: 500;
     cursor: pointer;
     border: none;
     text-align: left;
+    transition: transform .12s ease, box-shadow .12s ease;
   }
-  .concept-chip .emoji { font-size: 18px; display: block; margin-bottom: 4px; }
+  .concept-chip:active { transform: scale(.95); }
+  .concept-chip .emoji { font-size: 20px; display: block; margin-bottom: 6px; }
+  .concept-chip .status-dot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--grey);
+  }
+  .status-dot.explique_ses_mots { background: var(--green); }
+  .status-dot.explique_avec_aide { background: var(--yellow); }
+  .status-dot.montre_sans_expliquer { background: var(--blue); }
+  .status-dot.pas_encore_compris { background: var(--grey); }
+  .status-dot.nouvelle_question { background: #C97FE0; }
+
   .niveau {
     background: var(--accent-light);
-    border-radius: 10px;
-    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
     margin: 6px 0;
     font-size: 14px;
+    line-height: 1.4;
   }
-  .status-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
-  }
+  .niveau strong { color: var(--accent-dark); }
+
+  .status-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
   .status-btn {
-    border: 1px solid #ddd;
+    border: 1px solid #e2e2e2;
     background: #fff;
     border-radius: 999px;
-    padding: 8px 12px;
+    padding: 9px 13px;
     font-size: 13px;
     cursor: pointer;
+    transition: transform .1s ease, border-color .15s ease, background .15s ease;
   }
+  .status-btn:active { transform: scale(.94); }
   .status-btn.selected {
     border-color: var(--accent);
     background: var(--accent-light);
     font-weight: 600;
   }
+
   textarea, input[type=text] {
     width: 100%;
     border: 1px solid #ddd;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     padding: 10px;
     font-size: 14px;
     font-family: inherit;
     resize: vertical;
   }
+  textarea:focus, input[type=text]:focus, select:focus, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
   button.primary {
     background: var(--accent);
     color: #fff;
     border: none;
-    border-radius: 10px;
-    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
     font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
-    margin-top: 8px;
+    margin-top: 10px;
+    width: 100%;
+    transition: transform .1s ease, background .15s ease;
   }
+  button.primary:active { transform: scale(.97); background: var(--accent-dark); }
+  button.primary:disabled { opacity: .5; cursor: not-allowed; }
+
   .disclaimer {
     background: var(--warn-bg);
     border: 1px solid var(--warn-border);
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     padding: 10px 12px;
     font-size: 12px;
     color: #6b5a1f;
     margin-top: 10px;
   }
+
   .journal-entry {
     border-bottom: 1px solid #eee;
-    padding: 10px 0;
+    padding: 12px 0;
     font-size: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
   }
-  .journal-entry .meta {
-    color: var(--muted);
-    font-size: 12px;
-    margin-bottom: 4px;
+  .journal-entry:last-child { border-bottom: none; }
+  .journal-entry .dot {
+    width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; flex-shrink: 0;
   }
+  .journal-entry .meta { color: var(--muted); font-size: 12px; margin-bottom: 3px; }
+  .journal-entry .phrase { font-style: italic; }
+
   nav.tabbar {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #fff;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(255,255,255,.96);
+    backdrop-filter: blur(6px);
     display: flex;
     justify-content: space-around;
     border-top: 1px solid #eee;
@@ -153,26 +224,75 @@
     flex-direction: column;
     align-items: center;
     gap: 2px;
-    padding: 4px 6px;
+    padding: 5px 8px;
+    border-radius: 10px;
+    transition: transform .12s ease, color .15s ease;
   }
-  nav.tabbar button .icon { font-size: 20px; }
+  nav.tabbar button .icon { font-size: 20px; transition: transform .15s ease; }
   nav.tabbar button.active { color: var(--accent); font-weight: 600; }
+  nav.tabbar button.active .icon { transform: translateY(-2px) scale(1.08); }
+  nav.tabbar button:active { transform: scale(.92); }
+
   .empty { color: var(--muted); font-size: 13px; }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    left: 50%;
+    bottom: 84px;
+    transform: translate(-50%, 12px);
+    background: var(--accent-dark);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease;
+    z-index: 50;
+    white-space: nowrap;
+  }
+  #toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  /* Confetti canvas */
+  #confetti-canvas {
+    position: fixed; inset: 0; pointer-events: none; z-index: 60;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
 </style>
 </head>
 <body>
 
 <header class="top">
-  <h1>Alma</h1>
-  <p id="header-sub">4 concepts par semaine</p>
+  <div class="title-block">
+    <span class="mascot" aria-hidden="true">⭐</span>
+    <div>
+      <h1>Alma</h1>
+      <p id="header-sub">4 concepts par semaine</p>
+    </div>
+  </div>
+  <button id="install-btn">Installer</button>
 </header>
 
 <main>
 
   <!-- ACCUEIL -->
-  <section id="view-accueil" class="view active">
+  <section id="view-accueil" class="view active" aria-labelledby="accueil-title">
     <div class="card">
-      <h2>Semaine du <span id="accueil-date"></span></h2>
+      <h2 id="accueil-title">Semaine du <span id="accueil-date"></span></h2>
+      <div class="progress-row">
+        <svg class="progress-ring" width="52" height="52" viewBox="0 0 52 52">
+          <circle cx="26" cy="26" r="22" fill="none" stroke="#E4F1EF" stroke-width="6"></circle>
+          <circle id="progress-circle" cx="26" cy="26" r="22" fill="none" stroke="#2E6F6B" stroke-width="6"
+                  stroke-linecap="round" stroke-dasharray="138.2" stroke-dashoffset="138.2"
+                  transform="rotate(-90 26 26)" style="transition: stroke-dashoffset .5s ease;"></circle>
+        </svg>
+        <div class="progress-text"><strong id="progress-count">0/4</strong><br>concepts explorés cette semaine</div>
+      </div>
       <div class="concept-grid" id="accueil-concepts"></div>
     </div>
     <div class="card">
@@ -185,48 +305,48 @@
   </section>
 
   <!-- CALENDRIER -->
-  <section id="view-calendrier" class="view">
+  <section id="view-calendrier" class="view" aria-labelledby="calendrier-title">
     <div class="card">
-      <h2>Concepts de la semaine</h2>
+      <h2 id="calendrier-title">Concepts de la semaine</h2>
       <div class="concept-grid" id="calendrier-concepts"></div>
       <p class="empty" style="margin-top:10px;">Objectif : explorer les 4 concepts à son rythme, pas de pression quotidienne.</p>
     </div>
   </section>
 
   <!-- EXPLORER -->
-  <section id="view-explorer" class="view">
+  <section id="view-explorer" class="view" aria-labelledby="explorer-title">
     <div class="card">
-      <h2>Bibliothèque d'activités</h2>
+      <h2 id="explorer-title">🧩 Bibliothèque d'activités</h2>
       <div id="explorer-list"></div>
     </div>
   </section>
 
   <!-- CONCEPTS -->
-  <section id="view-concepts" class="view">
+  <section id="view-concepts" class="view" aria-labelledby="concepts-title">
     <div class="card">
-      <h2>Concept en cours</h2>
-      <select id="concept-select" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;"></select>
+      <h2 id="concepts-title">Concept en cours</h2>
+      <select id="concept-select" style="width:100%; padding:10px; border-radius:10px; border:1px solid #ddd; font-size:14px;"></select>
       <div id="concept-detail" style="margin-top:12px;"></div>
 
       <h2 style="margin-top:18px;">Alma l'explique</h2>
-      <div class="status-row" id="statut-row"></div>
+      <div class="status-row" id="statut-row" role="radiogroup" aria-label="Statut de compréhension"></div>
       <textarea id="phrase-enfant" rows="2" placeholder="Phrase d'Alma (optionnel) — ex. « Même si je les écarte, il y en a toujours trois... »" style="margin-top:10px;"></textarea>
-      <button class="primary" id="btn-save-observation">Enregistrer</button>
+      <button class="primary" id="btn-save-observation" disabled>Choisis d'abord un statut</button>
     </div>
   </section>
 
   <!-- JOURNAL -->
-  <section id="view-journal" class="view">
+  <section id="view-journal" class="view" aria-labelledby="journal-title">
     <div class="card">
-      <h2>📖 Journal d'Alma</h2>
+      <h2 id="journal-title">📖 Journal d'Alma</h2>
       <div id="journal-list"><p class="empty">Aucune observation pour l'instant.</p></div>
     </div>
   </section>
 
   <!-- PARENT -->
-  <section id="view-parent" class="view">
+  <section id="view-parent" class="view" aria-labelledby="parent-title">
     <div class="card">
-      <h2>👩‍👧 Parent</h2>
+      <h2 id="parent-title">👩‍👧 Parent</h2>
       <p>Conseils pédagogiques et repères pour accompagner sans faire à sa place.</p>
     </div>
     <div class="card">
@@ -244,17 +364,25 @@
 
 </main>
 
-<nav class="tabbar">
-  <button data-view="accueil" class="active"><span class="icon">🏠</span>Accueil</button>
-  <button data-view="calendrier"><span class="icon">📅</span>Calendrier</button>
-  <button data-view="explorer"><span class="icon">🧩</span>Explorer</button>
-  <button data-view="concepts"><span class="icon">🧠</span>Concepts</button>
-  <button data-view="journal"><span class="icon">📖</span>Journal</button>
-  <button data-view="parent"><span class="icon">👩‍👧</span>Parent</button>
+<nav class="tabbar" role="tablist" aria-label="Navigation principale">
+  <button data-view="accueil" class="active" role="tab" aria-selected="true"><span class="icon">🏠</span>Accueil</button>
+  <button data-view="calendrier" role="tab" aria-selected="false"><span class="icon">📅</span>Calendrier</button>
+  <button data-view="explorer" role="tab" aria-selected="false"><span class="icon">🧩</span>Explorer</button>
+  <button data-view="concepts" role="tab" aria-selected="false"><span class="icon">🧠</span>Concepts</button>
+  <button data-view="journal" role="tab" aria-selected="false"><span class="icon">📖</span>Journal</button>
+  <button data-view="parent" role="tab" aria-selected="false"><span class="icon">👩‍👧</span>Parent</button>
 </nav>
 
+<div id="toast" role="status" aria-live="polite"></div>
+<canvas id="confetti-canvas"></canvas>
+
 <script>
-// ---------- Données d'exemple (à remplacer par un back-end / CMS) ----------
+"use strict";
+
+// ==========================================================================
+// Données d'exemple (à remplacer par un back-end / CMS — voir
+// 02-MODELE-DE-DONNEES-V3.md)
+// ==========================================================================
 const ALMA_DATA = {
   semaineCourante: {
     semaine_debut: new Date().toISOString().slice(0, 10),
@@ -263,14 +391,11 @@ const ALMA_DATA = {
       { concept_id: "cause_consequence", categorie: "langage" },
       { concept_id: "flotte_coule", categorie: "scientifique" },
       { concept_id: "essai_erreur", categorie: "transversal" }
-    ],
-    objectif_affiche: "Explorer les 4 concepts à son rythme."
+    ]
   },
   concepts: [
     {
-      id: "quantite",
-      categorie: "logique",
-      titre: "La quantité",
+      id: "quantite", categorie: "logique", titre: "La quantité",
       intention_parent: "Une quantité reste la même même si les objets changent de place.",
       niveaux: {
         "1_question": "Tu penses qu'il y en a toujours autant ?",
@@ -280,9 +405,7 @@ const ALMA_DATA = {
       }
     },
     {
-      id: "cause_consequence",
-      categorie: "langage",
-      titre: "Cause / conséquence",
+      id: "cause_consequence", categorie: "langage", titre: "Cause / conséquence",
       intention_parent: "Une action entraîne un effet observable.",
       niveaux: {
         "1_question": "Qu'est-ce qui va se passer si... ?",
@@ -292,9 +415,7 @@ const ALMA_DATA = {
       }
     },
     {
-      id: "flotte_coule",
-      categorie: "scientifique",
-      titre: "Flotte / coule",
+      id: "flotte_coule", categorie: "scientifique", titre: "Flotte / coule",
       intention_parent: "Certains objets flottent, d'autres coulent, et ce n'est pas seulement une question de taille.",
       niveaux: {
         "1_question": "Tu penses que ça va flotter ou couler ?",
@@ -304,9 +425,7 @@ const ALMA_DATA = {
       }
     },
     {
-      id: "essai_erreur",
-      categorie: "transversal",
-      titre: "Essai / erreur",
+      id: "essai_erreur", categorie: "transversal", titre: "Essai / erreur",
       intention_parent: "Se tromper fait partie de comment on apprend.",
       niveaux: {
         "1_question": "Qu'est-ce qui te fait penser ça ?",
@@ -318,15 +437,12 @@ const ALMA_DATA = {
   ],
   activites: [
     {
-      id: "act_quantite_nourriture",
-      concept_id: "quantite",
-      contexte: "repas",
+      id: "act_quantite_nourriture", concept_id: "quantite", contexte: "repas",
       consigne_parent: "Mets 3 morceaux de nourriture ici. Demande à Alma combien il y en a. Écarte ensuite les morceaux. Demande-lui s'il y en a toujours 3.",
       question_pivot: "Comment tu sais ?"
     }
   ],
   conseilDuJour: {
-    id: "conseil_erreur_verification",
     titre: "Ne corrigez pas trop vite",
     corps: "Lorsque Alma donne une réponse incorrecte, essayez d'abord : « Qu'est-ce qui te fait penser ça ? » Puis laissez-la vérifier.",
     pourquoi: "L'erreur peut devenir une occasion d'examiner son raisonnement plutôt qu'un simple signal « faux ».",
@@ -334,177 +450,7 @@ const ALMA_DATA = {
   }
 };
 
-// ---------- Navigation ----------
-document.querySelectorAll('nav.tabbar button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('nav.tabbar button').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('section.view').forEach(v => v.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('view-' + btn.dataset.view).classList.add('active');
-  });
-});
-
-// ---------- Data helpers ----------
 const CATEGORIE_EMOJI = { logique: '🔢', langage: '🗣️', scientifique: '🔎', transversal: '🧠' };
-
-function conceptById(id) {
-  return ALMA_DATA.concepts.find(c => c.id === id);
-}
-
-function formatDate(iso) {
-  const d = new Date(iso + 'T00:00:00');
-  return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
-}
-
-// ---------- Local storage (observations) ----------
-const STORAGE_KEY = 'alma_observations_v1';
-function loadObservations() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch (e) { return []; }
-}
-function saveObservations(list) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-}
-
-// ---------- Render: Accueil ----------
-function renderAccueil() {
-  const semaine = ALMA_DATA.semaineCourante;
-  document.getElementById('accueil-date').textContent = formatDate(semaine.semaine_debut);
-  const grid = document.getElementById('accueil-concepts');
-  grid.innerHTML = '';
-  semaine.concepts.forEach(entry => {
-    const c = conceptById(entry.concept_id);
-    if (!c) return;
-    const chip = document.createElement('button');
-    chip.className = 'concept-chip';
-    chip.innerHTML = `<span class="emoji">${CATEGORIE_EMOJI[entry.categorie] || ''}</span>${c.titre}`;
-    chip.addEventListener('click', () => showConceptDetail(c.id));
-    grid.appendChild(chip);
-  });
-
-  const conseil = ALMA_DATA.conseilDuJour;
-  document.getElementById('conseil-titre').textContent = conseil.titre;
-  document.getElementById('conseil-corps').textContent = conseil.corps;
-  document.getElementById('conseil-pourquoi').textContent = 'Pourquoi ? ' + conseil.pourquoi;
-  document.getElementById('conseil-disclaimer').textContent = conseil.avertissement_obligatoire;
-}
-
-// ---------- Render: Calendrier ----------
-function renderCalendrier() {
-  const semaine = ALMA_DATA.semaineCourante;
-  const grid = document.getElementById('calendrier-concepts');
-  grid.innerHTML = '';
-  semaine.concepts.forEach(entry => {
-    const c = conceptById(entry.concept_id);
-    if (!c) return;
-    const chip = document.createElement('div');
-    chip.className = 'concept-chip';
-    chip.innerHTML = `<span class="emoji">${CATEGORIE_EMOJI[entry.categorie] || ''}</span>${c.titre}`;
-    grid.appendChild(chip);
-  });
-}
-
-// ---------- Render: Explorer ----------
-function renderExplorer() {
-  const list = document.getElementById('explorer-list');
-  list.innerHTML = '';
-  if (!ALMA_DATA.activites.length) {
-    list.innerHTML = '<p class="empty">Aucune activité pour l\'instant.</p>';
-    return;
-  }
-  ALMA_DATA.activites.forEach(act => {
-    const c = conceptById(act.concept_id);
-    const card = document.createElement('div');
-    card.className = 'niveau';
-    card.innerHTML = `<strong>${c ? c.titre : act.concept_id}</strong><br>${act.consigne_parent}`;
-    list.appendChild(card);
-  });
-}
-
-// ---------- Render: Concepts ----------
-function renderConceptSelect() {
-  const select = document.getElementById('concept-select');
-  select.innerHTML = '';
-  ALMA_DATA.concepts.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c.id;
-    opt.textContent = `${CATEGORIE_EMOJI[c.categorie] || ''} ${c.titre}`;
-    select.appendChild(opt);
-  });
-  select.addEventListener('change', () => showConceptDetail(select.value));
-  if (ALMA_DATA.concepts.length) showConceptDetail(ALMA_DATA.concepts[0].id);
-}
-
-let currentConceptId = null;
-let currentStatut = null;
-
-function showConceptDetail(id) {
-  currentConceptId = id;
-  document.getElementById('concept-select').value = id;
-  const c = conceptById(id);
-  const detail = document.getElementById('concept-detail');
-  if (!c) { detail.innerHTML = ''; return; }
-  detail.innerHTML = `
-    <p class="empty">${c.intention_parent || ''}</p>
-    <div class="niveau"><strong>1. Question</strong><br>${c.niveaux['1_question']}</div>
-    <div class="niveau"><strong>2. Indice</strong><br>${c.niveaux['2_indice']}</div>
-    <div class="niveau"><strong>3. Expérience</strong><br>${c.niveaux['3_experience']}</div>
-    <div class="niveau"><strong>4. Transfert</strong><br>${c.niveaux['4_transfert']}</div>
-  `;
-  currentStatut = null;
-  document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('phrase-enfant').value = '';
-  document.getElementById('view-accueil').classList.remove('active');
-  document.getElementById('view-concepts').classList.add('active');
-  document.querySelectorAll('nav.tabbar button').forEach(b => b.classList.remove('active'));
-  document.querySelector('nav.tabbar button[data-view="concepts"]').classList.add('active');
-}
-
-function renderStatutRow() {
-  const statuts = [
-    { key: 'explique_ses_mots', label: '🟢 Ses propres mots' },
-    { key: 'explique_avec_aide', label: '🟡 Avec de l\'aide' },
-    { key: 'montre_sans_expliquer', label: '🔵 Montre sans expliquer' },
-    { key: 'pas_encore_compris', label: '⚪ Pas encore compris' },
-    { key: 'nouvelle_question', label: '❓ Nouvelle question' }
-  ];
-  const row = document.getElementById('statut-row');
-  row.innerHTML = '';
-  statuts.forEach(s => {
-    const btn = document.createElement('button');
-    btn.className = 'status-btn';
-    btn.textContent = s.label;
-    btn.addEventListener('click', () => {
-      currentStatut = s.key;
-      document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-    });
-    row.appendChild(btn);
-  });
-}
-
-document.getElementById('btn-save-observation').addEventListener('click', () => {
-  if (!currentConceptId || !currentStatut) {
-    alert('Choisis un statut pour « Alma l\'explique » avant d\'enregistrer.');
-    return;
-  }
-  const obs = {
-    id: 'obs_' + Date.now(),
-    concept_id: currentConceptId,
-    date: new Date().toISOString().slice(0, 10),
-    statut: currentStatut,
-    phrase_enfant: document.getElementById('phrase-enfant').value.trim() || null
-  };
-  const list = loadObservations();
-  list.unshift(obs);
-  saveObservations(list);
-  renderJournal();
-  document.getElementById('phrase-enfant').value = '';
-  document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('selected'));
-  currentStatut = null;
-});
-
-// ---------- Render: Journal ----------
 const STATUT_LABEL = {
   explique_ses_mots: '🟢 Ses propres mots',
   explique_avec_aide: '🟡 Avec de l\'aide',
@@ -512,28 +458,355 @@ const STATUT_LABEL = {
   pas_encore_compris: '⚪ Pas encore compris',
   nouvelle_question: '❓ Nouvelle question'
 };
+const CELEBRATE_STATUTS = new Set(['explique_ses_mots', 'explique_avec_aide']);
 
-function renderJournal() {
-  const list = document.getElementById('journal-list');
-  const obs = loadObservations();
-  if (!obs.length) {
-    list.innerHTML = '<p class="empty">Aucune observation pour l\'instant.</p>';
+// ==========================================================================
+// DOM refs (mis en cache une seule fois — évite les lookups répétés)
+// ==========================================================================
+const $ = (sel) => document.querySelector(sel);
+const $all = (sel) => document.querySelectorAll(sel);
+
+const refs = {
+  tabButtons: $all('nav.tabbar button'),
+  views: $all('section.view'),
+  accueilDate: $('#accueil-date'),
+  accueilConcepts: $('#accueil-concepts'),
+  progressCircle: $('#progress-circle'),
+  progressCount: $('#progress-count'),
+  conseilTitre: $('#conseil-titre'),
+  conseilCorps: $('#conseil-corps'),
+  conseilPourquoi: $('#conseil-pourquoi'),
+  conseilDisclaimer: $('#conseil-disclaimer'),
+  calendrierConcepts: $('#calendrier-concepts'),
+  explorerList: $('#explorer-list'),
+  conceptSelect: $('#concept-select'),
+  conceptDetail: $('#concept-detail'),
+  statutRow: $('#statut-row'),
+  phraseEnfant: $('#phrase-enfant'),
+  btnSave: $('#btn-save-observation'),
+  journalList: $('#journal-list'),
+  toast: $('#toast'),
+  installBtn: $('#install-btn')
+};
+
+// ==========================================================================
+// Stockage local des observations
+// ==========================================================================
+const STORAGE_KEY = 'alma_observations_v1';
+
+function loadObservations() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch (e) { return []; }
+}
+function saveObservations(list) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+  catch (e) { /* stockage indisponible (navigation privée, quota...) — on continue sans persister */ }
+}
+// Dernier statut par concept, pour affichage des pastilles et de la progression.
+function latestStatusByConcept() {
+  const map = {};
+  loadObservations().forEach(o => { if (!(o.concept_id in map)) map[o.concept_id] = o.statut; });
+  return map;
+}
+
+// ==========================================================================
+// Navigation par onglets
+// ==========================================================================
+function switchView(name, { focus = true } = {}) {
+  refs.tabButtons.forEach(b => {
+    const active = b.dataset.view === name;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-selected', String(active));
+  });
+  refs.views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+  if (focus) {
+    const heading = document.querySelector('#view-' + name + ' h2, #view-' + name + ' [id$="-title"]');
+    if (heading) heading.setAttribute('tabindex', '-1');
+  }
+}
+refs.tabButtons.forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.view)));
+
+// ==========================================================================
+// Aides
+// ==========================================================================
+function conceptById(id) { return ALMA_DATA.concepts.find(c => c.id === id); }
+
+function formatDate(iso) {
+  return new Date(iso + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+}
+
+function showToast(message) {
+  refs.toast.textContent = message;
+  refs.toast.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => refs.toast.classList.remove('show'), 2200);
+}
+
+// Petite pluie de confettis en Canvas 2D, sans dépendance externe.
+function celebrate() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const canvas = $('#confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = innerWidth * dpr;
+  canvas.height = innerHeight * dpr;
+  canvas.style.width = innerWidth + 'px';
+  canvas.style.height = innerHeight + 'px';
+  ctx.scale(dpr, dpr);
+
+  const colors = ['#2E6F6B', '#E0A72E', '#3E8FD0', '#C97FE0', '#3CA370'];
+  const pieces = Array.from({ length: 60 }, () => ({
+    x: Math.random() * innerWidth,
+    y: -20 - Math.random() * 100,
+    r: 3 + Math.random() * 4,
+    c: colors[Math.floor(Math.random() * colors.length)],
+    vy: 2 + Math.random() * 3,
+    vx: -1 + Math.random() * 2,
+    rot: Math.random() * Math.PI,
+    vr: -0.2 + Math.random() * 0.4
+  }));
+
+  let frame = 0;
+  const maxFrames = 90;
+  function tick() {
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    pieces.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.r, -p.r * 0.6, p.r * 2, p.r * 1.2);
+      ctx.restore();
+    });
+    frame++;
+    if (frame < maxFrames) requestAnimationFrame(tick);
+    else ctx.clearRect(0, 0, innerWidth, innerHeight);
+  }
+  requestAnimationFrame(tick);
+}
+
+function hapticTap() {
+  if ('vibrate' in navigator) { try { navigator.vibrate(12); } catch (e) {} }
+}
+
+// ==========================================================================
+// Rendu : Accueil
+// ==========================================================================
+function renderAccueil() {
+  const semaine = ALMA_DATA.semaineCourante;
+  refs.accueilDate.textContent = formatDate(semaine.semaine_debut);
+
+  const statusMap = latestStatusByConcept();
+  const explored = semaine.concepts.filter(e => statusMap[e.concept_id]).length;
+  const total = semaine.concepts.length;
+  const circumference = 138.2;
+  refs.progressCircle.style.strokeDashoffset = String(circumference * (1 - explored / total));
+  refs.progressCount.textContent = `${explored}/${total}`;
+
+  refs.accueilConcepts.innerHTML = '';
+  const fragment = document.createDocumentFragment();
+  semaine.concepts.forEach(entry => {
+    const c = conceptById(entry.concept_id);
+    if (!c) return;
+    const status = statusMap[entry.concept_id];
+    const chip = document.createElement('button');
+    chip.className = 'concept-chip';
+    chip.setAttribute('aria-label', c.titre + (status ? `, ${STATUT_LABEL[status]}` : ', pas encore exploré'));
+    chip.innerHTML = `
+      <span class="status-dot ${status || ''}"></span>
+      <span class="emoji">${CATEGORIE_EMOJI[entry.categorie] || ''}</span>${c.titre}`;
+    chip.addEventListener('click', () => { hapticTap(); showConceptDetail(c.id); });
+    fragment.appendChild(chip);
+  });
+  refs.accueilConcepts.appendChild(fragment);
+
+  const conseil = ALMA_DATA.conseilDuJour;
+  refs.conseilTitre.textContent = conseil.titre;
+  refs.conseilCorps.textContent = conseil.corps;
+  refs.conseilPourquoi.textContent = 'Pourquoi ? ' + conseil.pourquoi;
+  refs.conseilDisclaimer.textContent = conseil.avertissement_obligatoire;
+}
+
+// ==========================================================================
+// Rendu : Calendrier
+// ==========================================================================
+function renderCalendrier() {
+  const statusMap = latestStatusByConcept();
+  refs.calendrierConcepts.innerHTML = '';
+  const fragment = document.createDocumentFragment();
+  ALMA_DATA.semaineCourante.concepts.forEach(entry => {
+    const c = conceptById(entry.concept_id);
+    if (!c) return;
+    const status = statusMap[entry.concept_id];
+    const chip = document.createElement('div');
+    chip.className = 'concept-chip';
+    chip.innerHTML = `
+      <span class="status-dot ${status || ''}"></span>
+      <span class="emoji">${CATEGORIE_EMOJI[entry.categorie] || ''}</span>${c.titre}`;
+    fragment.appendChild(chip);
+  });
+  refs.calendrierConcepts.appendChild(fragment);
+}
+
+// ==========================================================================
+// Rendu : Explorer
+// ==========================================================================
+function renderExplorer() {
+  refs.explorerList.innerHTML = '';
+  if (!ALMA_DATA.activites.length) {
+    refs.explorerList.innerHTML = '<p class="empty">Aucune activité pour l\'instant.</p>';
     return;
   }
-  list.innerHTML = '';
+  const fragment = document.createDocumentFragment();
+  ALMA_DATA.activites.forEach(act => {
+    const c = conceptById(act.concept_id);
+    const card = document.createElement('div');
+    card.className = 'niveau';
+    card.innerHTML = `<strong>${CATEGORIE_EMOJI[c && c.categorie] || ''} ${c ? c.titre : act.concept_id}</strong><br>${act.consigne_parent}`;
+    fragment.appendChild(card);
+  });
+  refs.explorerList.appendChild(fragment);
+}
+
+// ==========================================================================
+// Rendu : Concepts + « Alma l'explique »
+// ==========================================================================
+let currentConceptId = null;
+let currentStatut = null;
+
+function renderConceptSelect() {
+  refs.conceptSelect.innerHTML = '';
+  ALMA_DATA.concepts.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = `${CATEGORIE_EMOJI[c.categorie] || ''} ${c.titre}`;
+    refs.conceptSelect.appendChild(opt);
+  });
+  refs.conceptSelect.addEventListener('change', () => showConceptDetail(refs.conceptSelect.value, { switchTab: false }));
+  if (ALMA_DATA.concepts.length) showConceptDetail(ALMA_DATA.concepts[0].id, { switchTab: false });
+}
+
+function showConceptDetail(id, { switchTab = true } = {}) {
+  currentConceptId = id;
+  refs.conceptSelect.value = id;
+  const c = conceptById(id);
+  if (!c) { refs.conceptDetail.innerHTML = ''; return; }
+  refs.conceptDetail.innerHTML = `
+    <p class="empty">${c.intention_parent || ''}</p>
+    <div class="niveau"><strong>1. Question</strong><br>${c.niveaux['1_question']}</div>
+    <div class="niveau"><strong>2. Indice</strong><br>${c.niveaux['2_indice']}</div>
+    <div class="niveau"><strong>3. Expérience</strong><br>${c.niveaux['3_experience']}</div>
+    <div class="niveau"><strong>4. Transfert</strong><br>${c.niveaux['4_transfert']}</div>
+  `;
+  currentStatut = null;
+  $all('.status-btn').forEach(b => { b.classList.remove('selected'); b.setAttribute('aria-checked', 'false'); });
+  refs.phraseEnfant.value = '';
+  updateSaveButton();
+  if (switchTab) switchView('concepts');
+}
+
+function renderStatutRow() {
+  const statuts = Object.entries(STATUT_LABEL);
+  refs.statutRow.innerHTML = '';
+  statuts.forEach(([key, label]) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'status-btn';
+    btn.textContent = label;
+    btn.setAttribute('role', 'radio');
+    btn.setAttribute('aria-checked', 'false');
+    btn.addEventListener('click', () => {
+      hapticTap();
+      currentStatut = key;
+      $all('.status-btn').forEach(b => { b.classList.remove('selected'); b.setAttribute('aria-checked', 'false'); });
+      btn.classList.add('selected');
+      btn.setAttribute('aria-checked', 'true');
+      updateSaveButton();
+    });
+    refs.statutRow.appendChild(btn);
+  });
+}
+
+function updateSaveButton() {
+  refs.btnSave.disabled = !currentStatut;
+  refs.btnSave.textContent = currentStatut ? 'Enregistrer' : 'Choisis d\'abord un statut';
+}
+
+refs.btnSave.addEventListener('click', () => {
+  if (!currentConceptId || !currentStatut) return;
+  const obs = {
+    id: 'obs_' + Date.now(),
+    concept_id: currentConceptId,
+    date: new Date().toISOString().slice(0, 10),
+    statut: currentStatut,
+    phrase_enfant: refs.phraseEnfant.value.trim() || null
+  };
+  const list = loadObservations();
+  list.unshift(obs);
+  saveObservations(list);
+
+  renderJournal();
+  renderAccueil();
+  renderCalendrier();
+
+  refs.phraseEnfant.value = '';
+  $all('.status-btn').forEach(b => { b.classList.remove('selected'); b.setAttribute('aria-checked', 'false'); });
+  currentStatut = null;
+  updateSaveButton();
+
+  showToast('Observation enregistrée ✓');
+  if (CELEBRATE_STATUTS.has(obs.statut)) celebrate();
+});
+
+// ==========================================================================
+// Rendu : Journal
+// ==========================================================================
+function renderJournal() {
+  const obs = loadObservations();
+  if (!obs.length) {
+    refs.journalList.innerHTML = '<p class="empty">Aucune observation pour l\'instant.</p>';
+    return;
+  }
+  refs.journalList.innerHTML = '';
+  const fragment = document.createDocumentFragment();
   obs.forEach(o => {
     const c = conceptById(o.concept_id);
     const div = document.createElement('div');
     div.className = 'journal-entry';
     div.innerHTML = `
-      <div class="meta">${formatDate(o.date)} · ${c ? c.titre : o.concept_id} · ${STATUT_LABEL[o.statut] || o.statut}</div>
-      ${o.phrase_enfant ? `<div>« ${o.phrase_enfant} »</div>` : ''}
+      <span class="dot status-dot ${o.statut}"></span>
+      <div>
+        <div class="meta">${formatDate(o.date)} · ${c ? c.titre : o.concept_id} · ${STATUT_LABEL[o.statut] || o.statut}</div>
+        ${o.phrase_enfant ? `<div class="phrase">« ${o.phrase_enfant} »</div>` : ''}
+      </div>
     `;
-    list.appendChild(div);
+    fragment.appendChild(div);
   });
+  refs.journalList.appendChild(fragment);
 }
 
-// ---------- Init ----------
+// ==========================================================================
+// Installation PWA (Android/desktop — iOS n'expose pas cet évènement)
+// ==========================================================================
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  refs.installBtn.style.display = 'inline-block';
+});
+refs.installBtn.addEventListener('click', async () => {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  refs.installBtn.style.display = 'none';
+});
+window.addEventListener('appinstalled', () => { refs.installBtn.style.display = 'none'; });
+
+// ==========================================================================
+// Initialisation
+// ==========================================================================
 renderAccueil();
 renderCalendrier();
 renderExplorer();
@@ -541,7 +814,6 @@ renderConceptSelect();
 renderStatutRow();
 renderJournal();
 
-// ---------- Service worker ----------
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').catch(() => {});

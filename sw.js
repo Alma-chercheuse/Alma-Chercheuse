@@ -1,7 +1,7 @@
 // Service worker minimal — squelette PWA Alma
 // Mise en cache de l'app shell pour un fonctionnement hors-ligne de base.
 
-const CACHE_NAME = "alma-shell-v1";
+const CACHE_NAME = "alma-shell-v2";
 const APP_SHELL = [
   "./",
   "./index.html",

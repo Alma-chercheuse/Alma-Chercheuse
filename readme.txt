@@ -23,6 +23,35 @@ Ce que fait ce squelette
 - Conseil du jour avec l'avertissement pédagogique obligatoire déjà en place.
 - Installable comme app (PWA) une fois hébergée en HTTPS.
 
+Optimisations ajoutées (version "ludique et simple")
+-------------------------------------------------------
+Confort d'utilisation :
+- Anneau de progression sur l'Accueil (X/4 concepts explorés cette semaine).
+- Pastilles de couleur sur chaque concept indiquant son dernier statut.
+- Bouton "Enregistrer" désactivé tant qu'aucun statut n'est choisi, avec
+  libellé qui l'explique (évite l'alerte bloquante précédente).
+- Message de confirmation discret (toast) au lieu d'une popup.
+- Transitions douces entre les onglets, retour haptique léger (vibration
+  courte) sur mobile lors des interactions clés.
+- Petite animation de confettis (Canvas, sans dépendance externe) quand
+  l'enfant explique avec ses propres mots ou avec de l'aide — renforcement
+  positif ponctuel, pas systématique.
+- Bouton "Installer" qui apparaît automatiquement quand le navigateur le
+  permet (Android/desktop ; non disponible sur iOS, limitation du système).
+- Respecte prefers-reduced-motion : les animations sont désactivées si
+  l'utilisateur a demandé de réduire les animations dans son système.
+
+Qualité de code (côté développeur) :
+- Références DOM mises en cache une seule fois (objet "refs") au lieu de
+  ré-interroger le DOM à chaque rendu.
+- Rendu via DocumentFragment pour limiter les reflows.
+- localStorage encapsulé avec gestion d'erreur (navigation privée, quota
+  dépassé...) sans faire planter l'app.
+- Attributs ARIA (role="tablist"/"tab", role="radiogroup"/"radio",
+  aria-live sur le toast) pour l'accessibilité lecteur d'écran.
+- Feuille de style organisée par zone fonctionnelle, variables CSS
+  centralisées (couleurs de statut incluses) pour faciliter un futur thème.
+
 Ce que ce squelette NE fait PAS (à construire ensuite)
 --------------------------------------------------------
 - Pas de back-end : les concepts, activités et conseils sont codés en dur
